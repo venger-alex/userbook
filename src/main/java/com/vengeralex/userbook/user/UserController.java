@@ -15,6 +15,11 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/count")
+    public Long getCount() {
+        return userService.getCount();
+    }
+
     @GetMapping("/all")
     public List<UserEntity> getAll() {
         return userService.getAll();
@@ -23,6 +28,11 @@ public class UserController {
     @GetMapping("/users")
     public List<UserEntity> getUsers() {
         return userService.getAll();
+    }
+
+    @GetMapping("/usersbypage")
+    public List<UserEntity> getUsersByPage(@RequestParam Integer page, @RequestParam(defaultValue = "5", required = false) Integer rows) {
+        return userService.getAllByPage(page, rows).getContent();
     }
 
     @GetMapping("/users/{id}")
