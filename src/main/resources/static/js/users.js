@@ -17,6 +17,12 @@ var renderUsers_jQuery = function(userList) {
                     .append($('<td/>').html(value['lastName']))
                     .append($('<td/>').html(value['birthDay']))
                     .append($('<td/>').html(value['gender']))
+                    .append($('<td/>')
+                        .append($('<button/>').click(function () {
+                            delUser(parseInt(value['id']));
+                        })
+                            .append($('<span/>').html("Delete")))
+                    )
                 );
         });
 }
@@ -97,12 +103,36 @@ function loadUsersByPage(page, rows) {
     })
 }
 
+function delUser(userId) {
+    $.ajax({
+        url: '/users/' + userId,
+        type: "DELETE",
+        success: function (){
+            putMsg("Successful deletion of a user with an ID equal to " + userId);
+            show('block');
+            loadUsersQuantity();
+            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+        error: function (){
+            putMsg("While deleting a user with ID equal to " + userId + ", an error occurred");
+            show('block');}
+    })
+}
+
 function loadUsersQuantity() {
     $.ajax({
         url: '/count',
         dataType: "json",
         success: renderPages_jQuery
     })
+}
+
+function putMsg(msg) {
+    document.getElementById('window_text').innerText = msg;
+}
+
+function show(state){
+    document.getElementById('window').style.display = state;
+    document.getElementById('wrap').style.display = state;
 }
 
 $(document).ready(function(){
