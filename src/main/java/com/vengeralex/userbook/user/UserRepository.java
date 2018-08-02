@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findById(Integer id);
 
-    @Query("SELECT user FROM UserEntity AS user ")
+    @Query("SELECT user FROM UserEntity AS user ORDER BY user.id ASC ")
     Page<UserEntity> findAllByPage(Pageable pageable);
 }

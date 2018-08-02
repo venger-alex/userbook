@@ -19,9 +19,15 @@ var renderUsers_jQuery = function(userList) {
                     .append($('<td/>').html(value['gender']))
                     .append($('<td/>')
                         .append($('<button/>').click(function () {
+                            editUser(parseInt(value['id']));
+                        })
+                            .append($('<span/>').html("Edit")))
+
+                        .append($('<button/>').click(function () {
                             delUser(parseInt(value['id']));
                         })
                             .append($('<span/>').html("Delete")))
+
                     )
                 );
         });
@@ -118,6 +124,53 @@ function delUser(userId) {
     })
 }
 
+function editUser(userId) {
+    getUserById(userId);
+}
+
+var handleUserById = function renderEditWindow_jQuery(user) {
+    putDataToEditWindow(user);
+    showEditWindow('block');
+}
+
+function getUserById(userId) {
+    $.ajax({
+        url: '/users/' + userId,
+        dataType: 'json',
+        success: handleUserById,
+        error: function () {
+            putMsg("Can\'t read the user with ID equal to " + userId + ", an error occurred");
+            show('block');
+        }
+    })
+}
+
+function putUser() {
+    var userId = $("#user_id").val();
+    var user = {
+        id: userId,
+        firstName: $("#user_first_name").val(),
+        lastName: $("#user_last_name").val(),
+        birthDay: $("#user_birth_day").val(),
+        gender: $("#user_gender").val()
+    };
+
+    $.ajax({
+        url: '/users/' + userId,
+        type: "PUT",
+        contentType: 'application/json',
+        data: JSON.stringify(user),
+        success: function (){
+            putMsg("Successful edit of a user with an ID equal to " + userId);
+            show('block');
+            loadUsersQuantity();
+            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+        error: function (){
+            putMsg("While editing a user with ID equal to " + userId + ", an error occurred");
+            show('block');}
+    })
+}
+
 function loadUsersQuantity() {
     $.ajax({
         url: '/count',
@@ -130,8 +183,25 @@ function putMsg(msg) {
     document.getElementById('window_text').innerText = msg;
 }
 
+function putDataToEditWindow(user) {
+    $("#title_edit_window").empty();
+    $("#title_edit_window").append($('<h2/>').html("Edit user"));
+
+    $("#user_id").val(user['id']);
+    $("#user_first_name").val(user['firstName']);
+    $("#user_last_name").val(user['lastName']);
+    $("#user_birth_day").val(user['birthDay']);
+    $("#user_gender").val(user['gender']);
+
+}
+
 function show(state){
     document.getElementById('window').style.display = state;
+    document.getElementById('wrap').style.display = state;
+}
+
+function showEditWindow(state){
+    document.getElementById('edit_window').style.display = state;
     document.getElementById('wrap').style.display = state;
 }
 
