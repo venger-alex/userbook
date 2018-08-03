@@ -1,0 +1,78 @@
+.pages_buttons {
+    margin: 5px;
+}
+
+#wrap{
+    display: none;
+    opacity: 0.8;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 16px;
+    background-color: rgba(1, 1, 1, 0.725);
+    z-index: 100;
+    overflow: auto;
+}
+
+#window{
+    width: 300px;
+    height: 180px;
+    margin: 50px auto;
+    display: none;
+    background: #fff;
+    z-index: 200;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 16px;
+    text-align: center;
+}
+
+#edit_window {
+    width: 300px;
+    height: 350px;
+    margin: 50px auto;
+    display: none;
+    background: #fff;
+    z-index: 200;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 16px;
+    text-align: center;
+}
+
+.ok, .ok_edit_window, .cancel_edit_window{
+    width: 100px;
+    height: 30px;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.add_user {
+    width: 300px;
+    height: 30px;
+    margin: 10px;
+}
+
+.close, .close_edit_window{
+    margin-left: 264px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.user_input {
+    margin: 10px;
+    text-align: left;
+}
+
+.title_edit_window {
+    margin: 5px;
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/users.js"></script>
+
+</head>
+<body>
+
+    <h1>Users</h1>
+
+    <button class="add_user" onclick="{putDataToEditWindowForAdd(); showEditWindow('block')}">Add user</button>
+
+    <div><span>Pages: </span><span id="users-list-pages"></span></div>
+
+    <table id="users-list" border="1px">
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Birth day</th>
+            <th>Gender</th>
+            <th>Operations</th>
+        </tr>
+    </table>
+
+    <div onclick="show('none'); showEditWindow('none')" id="wrap"></div>
+
+    <div id="window">
+        <img class="close" onclick="show('none')" src="images/close.png" />
+        <h3 id="window_text"></h3>
+        <button class="ok" onclick="show('none')">OK</button>
+    </div>
+
+
+    <div id="edit_window">
+        <img class="close_edit_window" onclick="showEditWindow('none')" src="images/close.png" />
+
+        <div id="title_edit_window"></div>
+
+        <div class="user_input">
+            <label>ID: <input type="text" size="10" id="user_id" value="" /></label>
+        </div>
+        <div class="user_input">
+            <label>First name: <input type="text" size="20" id="user_first_name" value="" /></label>
+        </div>
+        <div class="user_input">
+            <label>Last name: <input type="text" size="20" id="user_last_name" value="" /></label>
+        </div>
+        <div class="user_input">
+            <label>Birth day: <input type="text" size="10" id="user_birth_day" value="" /></label>
+        </div>
+        <div class="user_input">
+            <label>Gender: <input type="text" size="10" id="user_gender" value="" /></label>
+        </div>
+
+        <button class="ok_edit_window">OK</button>
+
+        <button class="cancel_edit_window" onclick="showEditWindow('none')">Cancel</button>
+    </div>
+</body>
+</html>
