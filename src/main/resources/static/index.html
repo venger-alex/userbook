@@ -13,6 +13,8 @@
 
     <h1>Users</h1>
 
+    <button class="add_user" onclick="{putDataToEditWindowForAdd(); showEditWindow('block')}">Add user</button>
+
     <div><span>Pages: </span><span id="users-list-pages"></span></div>
 
     <table id="users-list" border="1px">
@@ -56,7 +58,7 @@
             <label>Gender: <input type="text" size="10" id="user_gender" value="" /></label>
         </div>
 
-        <button class="ok_edit_window" onclick="putUser(); showEditWindow('none');">OK</button>
+        <button class="ok_edit_window">OK</button>
 
         <button class="cancel_edit_window" onclick="showEditWindow('none')">Cancel</button>
     </div>

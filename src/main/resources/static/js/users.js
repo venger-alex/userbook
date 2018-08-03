@@ -171,6 +171,31 @@ function putUser() {
     })
 }
 
+function createUser() {
+
+    var user = {
+        firstName: $("#user_first_name").val(),
+        lastName: $("#user_last_name").val(),
+        birthDay: $("#user_birth_day").val(),
+        gender: $("#user_gender").val()
+    };
+
+    $.ajax({
+        url: '/users',
+        type: "POST",
+        contentType: 'application/json',
+        data: JSON.stringify(user),
+        success: function (){
+            putMsg("Successful add of a user");
+            show('block');
+            loadUsersQuantity();
+            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+        error: function (){
+            putMsg("While adding a user, an error occurred");
+            show('block');}
+    })
+}
+
 function loadUsersQuantity() {
     $.ajax({
         url: '/count',
@@ -183,9 +208,32 @@ function putMsg(msg) {
     document.getElementById('window_text').innerText = msg;
 }
 
+function putDataToEditWindowForAdd() {
+    $("#title_edit_window").empty();
+    $("#title_edit_window").append($('<h2/>').html("Add user"));
+
+
+    $("#user_id").val("");
+    $("#user_id").attr("disabled", true);
+    $("#user_first_name").val("");
+    $("#user_last_name").val("");
+    $("#user_birth_day").val("");
+    $("#user_gender").val("");
+
+
+    $(".ok_edit_window").off();
+    $(".ok_edit_window").click(function () {
+        showEditWindow('none');
+        createUser();
+
+    });
+
+}
+
 function putDataToEditWindow(user) {
     $("#title_edit_window").empty();
     $("#title_edit_window").append($('<h2/>').html("Edit user"));
+    $("#user_id").attr("disabled", false);
 
     $("#user_id").val(user['id']);
     $("#user_first_name").val(user['firstName']);
@@ -193,6 +241,11 @@ function putDataToEditWindow(user) {
     $("#user_birth_day").val(user['birthDay']);
     $("#user_gender").val(user['gender']);
 
+    $(".ok_edit_window").off();
+    $(".ok_edit_window").click(function () {
+        showEditWindow('none');
+        putUser();
+    });
 }
 
 function show(state){
