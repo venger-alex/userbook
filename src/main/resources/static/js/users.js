@@ -1,41 +1,69 @@
-const DEFAULT_ROWS_PER_PAGE = 5;
-const DEFAULT_PAGES_STARTS_WITH = 1;
-var USERS_PER_PAGE = DEFAULT_ROWS_PER_PAGE;
-var CURRENT_PAGE = DEFAULT_PAGES_STARTS_WITH;
-
 const removeChilds = function (node) {
     var first;
     while (first = node.firstChild) node.removeChild(first);
 }
 
+const renderUsers = function(userList) {
+    const userTableNode = document.getElementById("users-list");
+    const headerNode = document.getElementById("users-list-header");
+    headerNode.style.display = "none";
+    document.body.appendChild(headerNode);
+    removeChilds(userTableNode);
+    userTableNode.appendChild(headerNode);
+    headerNode.style.display = "table-row";
 
-var renderUsers_jQuery = function(userList) {
-    $("tr:has(td)").remove();
+    const renderUser = function(value) {
+        const trNode = document.createElement("tr");
 
-    $.each(userList,
-        function (index, value) {
+        const tdIdNode = document.createElement("td");
+        tdIdNode.innerText = value['id'];
+        trNode.appendChild(tdIdNode);
 
-            $("#users-list")
-                .append($('<tr/>')
-                    .append($('<td/>').html(value['id']))
-                    .append($('<td/>').html(value['firstName']))
-                    .append($('<td/>').html(value['lastName']))
-                    .append($('<td/>').html(value['birthDay']))
-                    .append($('<td/>').html(value['gender']))
-                    .append($('<td/>')
-                        .append($('<button/>').click(function () {
-                            editUser(parseInt(value['id']));
-                        })
-                            .append($('<span/>').html("Edit")))
+        const tdFirstNameNode = document.createElement("td");
+        tdFirstNameNode.innerText = value['firstName'];
+        trNode.appendChild(tdFirstNameNode);
 
-                        .append($('<button/>').click(function () {
-                            delUser(parseInt(value['id']));
-                        })
-                            .append($('<span/>').html("Delete")))
+        const tdLastNameNode = document.createElement("td");
+        tdLastNameNode.innerText = value['lastName'];
+        trNode.appendChild(tdLastNameNode);
 
-                    )
-                );
+        const tdBirthDayNode = document.createElement("td");
+        tdBirthDayNode.innerText = value['birthDay'];
+        trNode.appendChild(tdBirthDayNode);
+
+        const tdGenderNode = document.createElement("td");
+        tdGenderNode.innerText = value['gender'];
+        trNode.appendChild(tdGenderNode);
+
+        const tdOperationsNode = document.createElement("td");
+
+        const buttonEditNode = document.createElement("button");
+        buttonEditNode.addEventListener('click', function (ev) {
+            editUser(parseInt(value['id']));
         });
+
+        const spanEditNode = document.createElement("span");
+        spanEditNode.innerHTML = "Edit";
+        buttonEditNode.appendChild(spanEditNode);
+        tdOperationsNode.appendChild(buttonEditNode);
+
+        const buttonDelNode = document.createElement("button");
+        buttonDelNode.addEventListener('click', function (ev) {
+            delUser(parseInt(value['id']));
+        });
+
+        const spanDelNode = document.createElement("span");
+        spanDelNode.innerHTML = "Delete";
+        buttonDelNode.appendChild(spanDelNode);
+        tdOperationsNode.appendChild(buttonDelNode);
+
+        trNode.appendChild(tdOperationsNode);
+
+        userTableNode.appendChild(trNode);
+
+    }
+
+    userList.forEach(renderUser);
 }
 
 const renderPages = function (usersQuantity) {
@@ -102,7 +130,7 @@ function pagination(c, m, ellipsis) {
 
 function getCurrentPage() {
     const result = getParameterByName("page");
-    return !result ? 0 : parseInt(result);
+    return !result ? 1 : parseInt(result);
 }
 
 function getUsersPerPage() {
@@ -122,11 +150,11 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function loadUsersByPage(page, rows) {
+function loadUsersByPage(page, rows, callback) {
     $.ajax({
-        url: '/usersbypage?page=' + (parseInt(page)-1) + '&rows=' + rows,
+        url: '/usersbypage?page=' + (page-1) + '&rows=' + rows,
         dataType: "json",
-        success: renderUsers_jQuery
+        success: callback
     })
 }
 
@@ -138,7 +166,7 @@ function delUser(userId) {
             putMsg("Successful deletion of a user with an ID equal to " + userId);
             show('block');
             refreshPages();
-            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+            refreshUsers();},
         error: function (){
             putMsg("While deleting a user with ID equal to " + userId + ", an error occurred");
             show('block');}
@@ -185,7 +213,7 @@ function putUser() {
             putMsg("Successful edit of a user with an ID equal to " + userId);
             show('block');
             refreshPages();
-            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+            refreshUsers();},
         error: function (){
             putMsg("While editing a user with ID equal to " + userId + ", an error occurred");
             show('block');}
@@ -210,7 +238,7 @@ function createUser() {
             putMsg("Successful add of a user");
             show('block');
             refreshPages();
-            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+            refreshUsers();},
         error: function (){
             putMsg("While adding a user, an error occurred");
             show('block');}
@@ -279,17 +307,17 @@ function showEditWindow(state){
     document.getElementById('wrap').style.display = state;
 }
 
-
 function refreshPages() {
     loadUsersQuantity(renderPages);
 }
 
+function refreshUsers() {
+    const curPage = getCurrentPage();
+    const usersPerPage = getUsersPerPage();
+    loadUsersByPage(curPage, usersPerPage, renderUsers);
+}
 
 $(document).ready(function(){
-    CURRENT_PAGE = getParameterByName("page");
-    if(!CURRENT_PAGE) {CURRENT_PAGE = DEFAULT_PAGES_STARTS_WITH;} else {CURRENT_PAGE = parseInt(CURRENT_PAGE);}
-    USERS_PER_PAGE = getParameterByName('rows');
-    if(!USERS_PER_PAGE) {USERS_PER_PAGE = DEFAULT_ROWS_PER_PAGE;} else {USERS_PER_PAGE = parseInt(USERS_PER_PAGE)}
     refreshPages();
-    loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);
+    refreshUsers();
 });
