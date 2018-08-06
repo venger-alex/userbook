@@ -1,64 +1,103 @@
-const DEFAULT_ROWS_PER_PAGE = 5;
-const DEFAULT_PAGINATION_ELLIPSIS = '...';
-const DEFAULT_PAGES_STARTS_WITH = 1;
-var USERS_PER_PAGE = DEFAULT_ROWS_PER_PAGE;
-var CURRENT_PAGE = DEFAULT_PAGES_STARTS_WITH;
-
-var renderUsers_jQuery = function(userList) {
-    $("tr:has(td)").remove();
-
-    $.each(userList,
-        function (index, value) {
-
-            $("#users-list")
-                .append($('<tr/>')
-                    .append($('<td/>').html(value['id']))
-                    .append($('<td/>').html(value['firstName']))
-                    .append($('<td/>').html(value['lastName']))
-                    .append($('<td/>').html(value['birthDay']))
-                    .append($('<td/>').html(value['gender']))
-                    .append($('<td/>')
-                        .append($('<button/>').click(function () {
-                            editUser(parseInt(value['id']));
-                        })
-                            .append($('<span/>').html("Edit")))
-
-                        .append($('<button/>').click(function () {
-                            delUser(parseInt(value['id']));
-                        })
-                            .append($('<span/>').html("Delete")))
-
-                    )
-                );
-        });
+const removeChilds = function (node) {
+    var first;
+    while (first = node.firstChild) node.removeChild(first);
 }
 
-var renderPages_jQuery = function(usersQuantity) {
-    $("#users-list-pages").empty();
+const renderUsers = function(userList) {
+    const userTableNode = document.getElementById("users-list");
+    const headerNode = document.getElementById("users-list-header");
+    headerNode.style.display = "none";
+    document.body.appendChild(headerNode);
+    removeChilds(userTableNode);
+    userTableNode.appendChild(headerNode);
+    headerNode.style.display = "table-row";
 
-    var pagesQuantity = Math.ceil(usersQuantity/USERS_PER_PAGE);
+    const renderUser = function(value) {
+        const trNode = document.createElement("tr");
 
-    var pagesArray = pagination(CURRENT_PAGE, pagesQuantity);
+        const tdIdNode = document.createElement("td");
+        tdIdNode.innerText = value['id'];
+        trNode.appendChild(tdIdNode);
 
-    $.each(pagesArray,
-        function (index, value) {
-            if(value == DEFAULT_PAGINATION_ELLIPSIS || parseInt(value) == CURRENT_PAGE) {
-                $("#users-list-pages").append($('<span/>').html(value)).attr("class", "pages_buttons");
-            } else {
-                $("#users-list-pages")
-                    .append($('<a/>')
-                        .attr("href", "/index.html?page=" + value + "&rows=" + USERS_PER_PAGE)
-                        .attr("class", "pages_buttons")
-                        .append($('<span/>').html(value)))
-                ;
-            }
+        const tdFirstNameNode = document.createElement("td");
+        tdFirstNameNode.innerText = value['firstName'];
+        trNode.appendChild(tdFirstNameNode);
+
+        const tdLastNameNode = document.createElement("td");
+        tdLastNameNode.innerText = value['lastName'];
+        trNode.appendChild(tdLastNameNode);
+
+        const tdBirthDayNode = document.createElement("td");
+        tdBirthDayNode.innerText = value['birthDay'];
+        trNode.appendChild(tdBirthDayNode);
+
+        const tdGenderNode = document.createElement("td");
+        tdGenderNode.innerText = value['gender'];
+        trNode.appendChild(tdGenderNode);
+
+        const tdOperationsNode = document.createElement("td");
+
+        const buttonEditNode = document.createElement("button");
+        buttonEditNode.addEventListener('click', function (ev) {
+            editUser(parseInt(value['id']));
+        });
+
+        const spanEditNode = document.createElement("span");
+        spanEditNode.innerHTML = "Edit";
+        buttonEditNode.appendChild(spanEditNode);
+        tdOperationsNode.appendChild(buttonEditNode);
+
+        const buttonDelNode = document.createElement("button");
+        buttonDelNode.addEventListener('click', function (ev) {
+            delUser(parseInt(value['id']));
+        });
+
+        const spanDelNode = document.createElement("span");
+        spanDelNode.innerHTML = "Delete";
+        buttonDelNode.appendChild(spanDelNode);
+        tdOperationsNode.appendChild(buttonDelNode);
+
+        trNode.appendChild(tdOperationsNode);
+
+        userTableNode.appendChild(trNode);
+
+    }
+
+    userList.forEach(renderUser);
+}
+
+const renderPages = function (usersQuantity) {
+    const pagesNode = document.getElementById("users-list-pages");
+    removeChilds(pagesNode);
+
+    const curPage = getCurrentPage();
+    const usersPerPage = getUsersPerPage();
+    const pagesQuantity = Math.ceil(usersQuantity / usersPerPage);
+    const defPaginationEllipsis = "...";
+    const pagesArray = pagination(curPage, pagesQuantity, defPaginationEllipsis);
+
+    const renderPage =  function (value) {
+        var spanNode = document.createElement("span");
+        spanNode.className = "pages_buttons";
+        spanNode.innerHTML = value;
+
+        if (value === defPaginationEllipsis || parseInt(value) === curPage) {
+            pagesNode.appendChild(spanNode);
+        } else {
+            let linkNode = document.createElement("a");
+            linkNode.href = "/index.html?page=" + value + "&rows=" + usersPerPage;
+            linkNode.className = "pages_buttons";
+            linkNode.appendChild(spanNode);
+            pagesNode.appendChild(linkNode);
         }
-    );
+    }
+
+    pagesArray.forEach(renderPage);
 }
 
 // Simple pagination algorithm
 // url: https://gist.github.com/kottenator/9d936eb3e4e3c3e02598
-function pagination(c, m) {
+function pagination(c, m, ellipsis) {
     var current = c,
         last = m,
         delta = 2,
@@ -68,18 +107,18 @@ function pagination(c, m) {
         rangeWithDots = [],
         l;
 
-    for (var i = 1; i <= last; i++) {
+    for (let i = 1; i <= last; i++) {
         if (i == 1 || i == last || i >= left && i < right) {
             range.push(i);
         }
     }
 
-    for (var i of range) {
+    for (let i of range) {
         if (l) {
             if (i - l === 2) {
                 rangeWithDots.push(l + 1);
             } else if (i - l !== 1) {
-                rangeWithDots.push(DEFAULT_PAGINATION_ELLIPSIS);
+                rangeWithDots.push(ellipsis);
             }
         }
         rangeWithDots.push(i);
@@ -87,6 +126,16 @@ function pagination(c, m) {
     }
 
     return rangeWithDots;
+}
+
+function getCurrentPage() {
+    const result = getParameterByName("page");
+    return !result ? 1 : parseInt(result);
+}
+
+function getUsersPerPage() {
+    const result = getParameterByName("rows");
+    return !result ? 5 : parseInt(result);
 }
 
 //
@@ -101,11 +150,11 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function loadUsersByPage(page, rows) {
+function loadUsersByPage(page, rows, callback) {
     $.ajax({
-        url: '/usersbypage?page=' + (parseInt(page)-1) + '&rows=' + rows,
+        url: '/usersbypage?page=' + (page-1) + '&rows=' + rows,
         dataType: "json",
-        success: renderUsers_jQuery
+        success: callback
     })
 }
 
@@ -116,8 +165,8 @@ function delUser(userId) {
         success: function (){
             putMsg("Successful deletion of a user with an ID equal to " + userId);
             show('block');
-            loadUsersQuantity();
-            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+            refreshPages();
+            refreshUsers();},
         error: function (){
             putMsg("While deleting a user with ID equal to " + userId + ", an error occurred");
             show('block');}
@@ -163,8 +212,8 @@ function putUser() {
         success: function (){
             putMsg("Successful edit of a user with an ID equal to " + userId);
             show('block');
-            loadUsersQuantity();
-            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+            refreshPages();
+            refreshUsers();},
         error: function (){
             putMsg("While editing a user with ID equal to " + userId + ", an error occurred");
             show('block');}
@@ -188,19 +237,19 @@ function createUser() {
         success: function (){
             putMsg("Successful add of a user");
             show('block');
-            loadUsersQuantity();
-            loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);},
+            refreshPages();
+            refreshUsers();},
         error: function (){
             putMsg("While adding a user, an error occurred");
             show('block');}
     })
 }
 
-function loadUsersQuantity() {
+function loadUsersQuantity(callback) {
     $.ajax({
         url: '/count',
         dataType: "json",
-        success: renderPages_jQuery
+        success: callback
     })
 }
 
@@ -258,11 +307,17 @@ function showEditWindow(state){
     document.getElementById('wrap').style.display = state;
 }
 
+function refreshPages() {
+    loadUsersQuantity(renderPages);
+}
+
+function refreshUsers() {
+    const curPage = getCurrentPage();
+    const usersPerPage = getUsersPerPage();
+    loadUsersByPage(curPage, usersPerPage, renderUsers);
+}
+
 $(document).ready(function(){
-    CURRENT_PAGE = getParameterByName('page');
-    if(!CURRENT_PAGE) {CURRENT_PAGE = DEFAULT_PAGES_STARTS_WITH;} else {CURRENT_PAGE = parseInt(CURRENT_PAGE);}
-    USERS_PER_PAGE = getParameterByName('rows');
-    if(!USERS_PER_PAGE) {USERS_PER_PAGE = DEFAULT_ROWS_PER_PAGE;} else {USERS_PER_PAGE = parseInt(USERS_PER_PAGE)}
-    loadUsersQuantity();
-    loadUsersByPage(CURRENT_PAGE, USERS_PER_PAGE);
+    refreshPages();
+    refreshUsers();
 });
