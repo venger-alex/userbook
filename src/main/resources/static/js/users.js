@@ -35,29 +35,25 @@ const renderUsers = function(userList) {
         tdGenderNode.innerText = value['gender'];
         trNode.appendChild(tdGenderNode);
 
-        const tdOperationsNode = document.createElement("td");
-
-        const buttonEditNode = document.createElement("button");
-        buttonEditNode.addEventListener('click', function (ev) {
+        const tdUpdateNode = document.createElement("td");
+        const buttonUpdateNode = document.createElement("button");
+        buttonUpdateNode.className = "update_user_button";
+        buttonUpdateNode.innerHTML = "Update"
+        buttonUpdateNode.addEventListener('click', function (ev) {
             editUser(parseInt(value['id']));
         });
+        tdUpdateNode.appendChild(buttonUpdateNode);
+        trNode.appendChild(tdUpdateNode);
 
-        const spanEditNode = document.createElement("span");
-        spanEditNode.innerHTML = "Edit";
-        buttonEditNode.appendChild(spanEditNode);
-        tdOperationsNode.appendChild(buttonEditNode);
-
+        const tdDelNode = document.createElement("td");
         const buttonDelNode = document.createElement("button");
+        buttonDelNode.className = "delete_user_button";
+        buttonDelNode.innerHTML = "Delete"
         buttonDelNode.addEventListener('click', function (ev) {
             delUser(parseInt(value['id']));
         });
-
-        const spanDelNode = document.createElement("span");
-        spanDelNode.innerHTML = "Delete";
-        buttonDelNode.appendChild(spanDelNode);
-        tdOperationsNode.appendChild(buttonDelNode);
-
-        trNode.appendChild(tdOperationsNode);
+        tdDelNode.appendChild(buttonDelNode);
+        trNode.appendChild(tdDelNode);
 
         userTableNode.appendChild(trNode);
 
@@ -73,59 +69,31 @@ const renderPages = function (usersQuantity) {
     const curPage = getCurrentPage();
     const usersPerPage = getUsersPerPage();
     const pagesQuantity = Math.ceil(usersQuantity / usersPerPage);
-    const defPaginationEllipsis = "...";
-    const pagesArray = pagination(curPage, pagesQuantity, defPaginationEllipsis);
+    const pagesArray = generatePagesArray(pagesQuantity);
 
     const renderPage =  function (value) {
-        var spanNode = document.createElement("span");
-        spanNode.className = "pages_buttons";
-        spanNode.innerHTML = value;
+        var linkNode = document.createElement("a");
+        linkNode.href = "/index.html?page=" + value + "&rows=" + usersPerPage;
+        linkNode.className = "pages_buttons";
+        linkNode.innerHTML = value;
 
-        if (value === defPaginationEllipsis || parseInt(value) === curPage) {
-            pagesNode.appendChild(spanNode);
-        } else {
-            let linkNode = document.createElement("a");
-            linkNode.href = "/index.html?page=" + value + "&rows=" + usersPerPage;
-            linkNode.className = "pages_buttons";
-            linkNode.appendChild(spanNode);
-            pagesNode.appendChild(linkNode);
+        if (parseInt(value) === curPage) {
+            linkNode.className += " current_page";
         }
+
+        pagesNode.appendChild(linkNode);
     }
 
     pagesArray.forEach(renderPage);
 }
 
-// Simple pagination algorithm
-// url: https://gist.github.com/kottenator/9d936eb3e4e3c3e02598
-function pagination(c, m, ellipsis) {
-    var current = c,
-        last = m,
-        delta = 2,
-        left = current - delta,
-        right = current + delta + 1,
-        range = [],
-        rangeWithDots = [],
-        l;
+function generatePagesArray(quantity) {
+    var range = [];
 
-    for (let i = 1; i <= last; i++) {
-        if (i == 1 || i == last || i >= left && i < right) {
-            range.push(i);
-        }
+    for (let i = 1; i <= quantity; i++) {
+        range.push(i);
     }
-
-    for (let i of range) {
-        if (l) {
-            if (i - l === 2) {
-                rangeWithDots.push(l + 1);
-            } else if (i - l !== 1) {
-                rangeWithDots.push(ellipsis);
-            }
-        }
-        rangeWithDots.push(i);
-        l = i;
-    }
-
-    return rangeWithDots;
+    return range;
 }
 
 function getCurrentPage() {
@@ -138,8 +106,6 @@ function getUsersPerPage() {
     return !result ? 5 : parseInt(result);
 }
 
-//
-// url: https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');

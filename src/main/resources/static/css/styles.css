@@ -1,5 +1,165 @@
-.pages_buttons {
-    margin: 5px;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+}
+
+.caption_1 {
+    margin: 10px 0px;
+    padding: 0px;
+}
+
+#user-add-form {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    text-align: left;
+    margin: 0px 0px 35px;
+}
+
+#user-add-form tr th {
+    text-align: left;
+    font-weight: normal;
+    padding: 0px 0px 8px;
+}
+
+#user-add-form tr td {
+    text-align: left;
+    font-weight: normal;
+    padding: 0px 10px 0px 0px;
+}
+
+
+.input_user_data {
+    height: 25px;
+    width: 100%;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border: 1px solid lightgrey;
+    font-size: 1em;
+    padding: 0px 0px 0px 5px;
+}
+
+.add_user_button {
+    width: 100%;
+    color: white;
+    background: dodgerblue;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border: none;
+    text-decoration:none;
+    user-select: none;
+    outline: none;
+    margin: 0 auto;
+    display: inline-block;
+    font-size: 1em;
+    padding: 5px 50px;
+    cursor: pointer;
+}
+
+.add_user_button:hover {
+    background: steelblue;
+}
+.add_user_button:active {
+    background: midnightblue;
+}
+
+.update_user_button {
+    background: silver;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border: none;
+    text-decoration:none;
+    user-select: none;
+    outline: none;
+    margin: 0 auto;
+    display: inline-block;
+    font-size: 1em;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.update_user_button:hover {
+    background: darkgray;
+}
+.update_user_button:active {
+    background: gray;
+}
+
+.delete_user_button {
+    color: firebrick;
+    background: transparent;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border: 1px solid firebrick;
+    text-decoration:none;
+    user-select: none;
+    outline: none;
+    margin: 0 auto;
+    display: inline-block;
+    font-size: 1em;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.delete_user_button:hover {
+    background: mistyrose;
+}
+.delete_user_button:active {
+    background: lightsalmon;
+}
+
+a.pages_buttons {
+    color: white;
+    text-decoration: none;
+    user-select: none;
+    background: lightsteelblue;
+    padding: 10px 12px 7px 12px;
+    outline: none;
+    margin: 0 4px 0 0;
+    display: inline-block;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius: 4px;
+}
+a.pages_buttons:hover {
+    background: lightskyblue;
+}
+a.pages_buttons:active {
+    background: royalblue;
+}
+a.current_page {
+    background: cornflowerblue;
+}
+
+#users-list {
+    border: 1px solid lightgrey;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    text-align: left;
+
+}
+
+#users-list tr:nth-child(even) {
+    background-color: #e0e0e0;
+}
+
+#users-list tr th {
+    border: 1px solid lightgrey;
+    padding: 10px;
+}
+
+#users-list tr td {
+    border: 1px solid lightgrey;
+    padding: 10px;
+}
+
+#users-list tr:hover{
+    background-color: #f0f0f0;
 }
 
 #wrap{
@@ -32,6 +192,38 @@
     text-align: center;
 }
 
+.close_window_button {
+    margin-left: 264px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.ok_window_button {
+    color: white;
+    background: dodgerblue;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    border: none;
+    text-decoration:none;
+    user-select: none;
+    outline: none;
+    margin: 20px 5px 10px;
+    display: inline-block;
+    font-size: 1em;
+    padding: 5px 50px;
+    cursor: pointer;
+}
+
+.ok_window_button:hover {
+    background: steelblue;
+}
+.ok_window_button:active {
+    background: midnightblue;
+}
+
+
+
 #edit_window {
     width: 300px;
     height: 350px;
@@ -56,17 +248,6 @@
     margin-right: 5px;
 }
 
-.add_user {
-    width: 300px;
-    height: 30px;
-    margin: 10px;
-}
-
-.close, .close_edit_window{
-    margin-left: 264px;
-    margin-top: 4px;
-    cursor: pointer;
-}
 
 .user_input {
     margin: 10px;
