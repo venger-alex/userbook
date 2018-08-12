@@ -38,7 +38,7 @@
                 </select>
             </td>
             <td>
-                <button class="add_user_button" onclick="{ createUser(); }">Add user</button>
+                <button class="add_user_button" onclick="{ if(isValidAddUserForm()) { createUser(); } }">Add user</button>
             </td>
         </tr>
     </table>
@@ -95,7 +95,7 @@
                     </select>
                 </td>
                 <td>
-                    <button class="add_user_button" onclick="{ showEditWindow('none'); putUser(); }">Update user</button>
+                    <button class="add_user_button" onclick="{ if(isValidEditUserForm()) { showEditWindow('none'); putUser(); } }">Update user</button>
                 </td>
             </tr>
         </table>

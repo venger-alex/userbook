@@ -40,6 +40,8 @@ const renderUsers = function(userList) {
         buttonUpdateNode.className = "update_user_button";
         buttonUpdateNode.innerHTML = "Update"
         buttonUpdateNode.addEventListener('click', function (ev) {
+            let clazzErrMsg = "edit-input-error-message";
+            delErrorMsgs(clazzErrMsg);
             editUser(parseInt(value['id']));
         });
         tdUpdateNode.appendChild(buttonUpdateNode);
@@ -187,7 +189,6 @@ function putUser() {
 }
 
 function createUser() {
-
     var user = {
         firstName: $("#user_first_name").val(),
         lastName: $("#user_last_name").val(),
@@ -249,6 +250,144 @@ function refreshUsers() {
     const curPage = getCurrentPage();
     const usersPerPage = getUsersPerPage();
     loadUsersByPage(curPage, usersPerPage, renderUsers);
+}
+
+function isValidDate(val) {
+    var val_r = val.split("-");
+    var curDate = new Date(val_r[0], parseInt(val_r[1])-1, val_r[2]);
+    return (
+        curDate.getFullYear() == val_r[0]
+        && (curDate.getMonth()+1) == val_r[1]
+        && curDate.getDate() == val_r[2]
+    );
+}
+
+function isValidGender(val) {
+    return ("MALE" == val || "FEMALE" == val);
+}
+
+function CustomValidation() {
+    this.clearValidity();
+}
+
+CustomValidation.prototype = {
+    invalidities: [],
+
+    checkValidity: function (input) {
+        var flagHasError = false;
+        var validity = input.validity;
+
+        if (validity.patternMismatch) {
+            this.addInvalidity("This is the wrong pattern for this field");
+            flagHasError = true;
+        }
+
+        if(!input.value) {
+            this.addInvalidity("Required field");
+            flagHasError = true;
+        }
+
+        if(input.type === "date") {
+            if(!isValidDate(input.value)) {
+                this.addInvalidity("Not valid date");
+                flagHasError = true;
+            }
+        }
+
+        if(input.id == "user_gender") {
+            if(!isValidGender(input.value)) {
+                this.addInvalidity("Not valid gender (MALE, FEMALE)");
+                flagHasError = true;
+            }
+        }
+
+        return flagHasError;
+    },
+
+    addInvalidity: function (message) {
+        this.invalidities.push(message);
+    },
+
+    getInvalidities: function () {
+        return this.invalidities.join(' \n');
+    },
+
+    getInvaliditiesForHTML: function() {
+        return this.invalidities.join(' <br>');
+    },
+
+    clearValidity: function () {
+        while (this.invalidities[0]) {
+            this.invalidities.pop();
+        }
+    }
+}
+function validateInput(input, clazz) {
+    let flagIsError = false;
+    var inputCustomValidation = new CustomValidation();
+    flagIsError = inputCustomValidation.checkValidity(input);
+    var customValidityMessageForHTML = inputCustomValidation.getInvaliditiesForHTML();
+    input.insertAdjacentHTML('afterend', '<p class=' + clazz + '>' + customValidityMessageForHTML + '</p>');
+    return flagIsError;
+}
+
+function delErrorMsgs(clazz) {
+    var errorMsgs = document.getElementsByClassName(clazz);
+    while (errorMsgs[0]) {
+        errorMsgs[0].parentNode.removeChild(errorMsgs[0]);
+    }
+}
+
+function isValidAddUserForm() {
+    var flagIsError = false;
+
+    let clazzErrMsg = "add-input-error-message";
+
+    delErrorMsgs(clazzErrMsg);
+
+    var input = document.getElementById("user_first_name");
+    var valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    input = document.getElementById("user_last_name");
+    valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    input = document.getElementById("user_birth_day");
+    valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    input = document.getElementById("user_gender");
+    valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    return !flagIsError;
+}
+
+function isValidEditUserForm() {
+    var flagIsError = false;
+
+    let clazzErrMsg = "edit-input-error-message";
+
+    delErrorMsgs(clazzErrMsg);
+
+    var input = document.getElementById("edit_user_first_name");
+    var valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    input = document.getElementById("edit_user_last_name");
+    valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    input = document.getElementById("edit_user_birth_day");
+    valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    input = document.getElementById("edit_user_gender");
+    valueFlagIsError = validateInput(input, clazzErrMsg);
+    flagIsError = flagIsError ? flagIsError : valueFlagIsError;
+
+    return !flagIsError;
 }
 
 $(document).ready(function(){

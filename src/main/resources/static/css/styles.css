@@ -14,6 +14,7 @@ body {
     width: 100%;
     text-align: left;
     margin: 0px 0px 35px;
+
 }
 
 .user-form tr th {
@@ -26,6 +27,7 @@ body {
     text-align: left;
     font-weight: normal;
     padding: 0px 10px 0px 0px;
+    vertical-align: top;
 }
 
 .input_user_data {
@@ -241,4 +243,11 @@ a.current_page {
     bottom: 0;
     padding: 16px;
     text-align: left;
+}
+
+.add-input-error-message, .edit-input-error-message {
+    font-size: 12px;
+    font-style: italic;
+    color: lightcoral;
+    margin: 4px 0 0;
 }
