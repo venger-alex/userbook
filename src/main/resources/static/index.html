@@ -13,7 +13,7 @@
 
     <h1 class="caption_1">Add user</h1>
 
-    <table id="user-add-form">
+    <table class="user-form">
         <tr>
             <th>First name</th>
             <th>Last name</th>
@@ -67,31 +67,40 @@
         <button class="ok_window_button" onclick="show('none')">OK</button>
     </div>
 
-
     <div id="edit_window">
-        <img class="close_window_button" onclick="showEditWindow('none')" src="images/close.png" />
+        <h1 class="caption_1">Update user</h1>
+        <table class="user-form">
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Birth day</th>
+                <th>Gender</th>
+                <th> </th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="hidden" id="edit_user_id" />
+                    <input class="input_user_data" type="text" id="edit_user_first_name" placeholder="First name" />
+                </td>
+                <td>
+                    <input class="input_user_data" type="text" id="edit_user_last_name" placeholder="Last name" />
+                </td>
+                <td>
+                    <input class="input_user_data" type="date" id="edit_user_birth_day" />
+                </td>
+                <td>
+                    <select class="input_user_data" id="edit_user_gender" >
+                        <option selected>MALE</option>
+                        <option>FEMALE</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="add_user_button" onclick="{ showEditWindow('none'); putUser(); }">Update user</button>
+                </td>
+            </tr>
+        </table>
 
-        <div id="title_edit_window"></div>
-
-        <div class="user_input">
-            <label>ID: <input type="text" size="10" id="user_id" value="" /></label>
-        </div>
-        <div class="user_input">
-            <label>First name: <input type="text" size="20" id="user_first_name" value="" /></label>
-        </div>
-        <div class="user_input">
-            <label>Last name: <input type="text" size="20" id="user_last_name" value="" /></label>
-        </div>
-        <div class="user_input">
-            <label>Birth day: <input type="text" size="10" id="user_birth_day" value="" /></label>
-        </div>
-        <div class="user_input">
-            <label>Gender: <input type="text" size="10" id="user_gender" value="" /></label>
-        </div>
-
-        <button class="ok_edit_window">OK</button>
-
-        <button class="cancel_edit_window" onclick="showEditWindow('none')">Cancel</button>
     </div>
+
 </body>
 </html>

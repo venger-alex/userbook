@@ -161,13 +161,13 @@ function getUserById(userId) {
 }
 
 function putUser() {
-    var userId = $("#user_id").val();
+    var userId = $("#edit_user_id").val();
     var user = {
         id: userId,
-        firstName: $("#user_first_name").val(),
-        lastName: $("#user_last_name").val(),
-        birthDay: $("#user_birth_day").val(),
-        gender: $("#user_gender").val()
+        firstName: $("#edit_user_first_name").val(),
+        lastName: $("#edit_user_last_name").val(),
+        birthDay: $("#edit_user_birth_day").val(),
+        gender: $("#edit_user_gender").val()
     };
 
     $.ajax({
@@ -246,21 +246,21 @@ function putDataToEditWindowForAdd() {
 }
 
 function putDataToEditWindow(user) {
-    $("#title_edit_window").empty();
-    $("#title_edit_window").append($('<h2/>').html("Edit user"));
-    $("#user_id").attr("disabled", false);
+    // $("#title_edit_window").empty();
+    // $("#title_edit_window").html("Update user");
+    //$("#user_id").attr("disabled", false);
 
-    $("#user_id").val(user['id']);
-    $("#user_first_name").val(user['firstName']);
-    $("#user_last_name").val(user['lastName']);
-    $("#user_birth_day").val(user['birthDay']);
-    $("#user_gender").val(user['gender']);
+    $("#edit_user_id").val(user['id']);
+    $("#edit_user_first_name").val(user['firstName']);
+    $("#edit_user_last_name").val(user['lastName']);
+    $("#edit_user_birth_day").val(user['birthDay']);
+    $("#edit_user_gender").val(user['gender']);
 
-    $(".ok_edit_window").off();
-    $(".ok_edit_window").click(function () {
-        showEditWindow('none');
-        putUser();
-    });
+    // $(".add_user_button").off();
+    // $(".add_user_button").click(function () {
+    //     showEditWindow('none');
+    //     putUser();
+    // });
 }
 
 function show(state){
