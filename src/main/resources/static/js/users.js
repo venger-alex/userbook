@@ -223,44 +223,12 @@ function putMsg(msg) {
     document.getElementById('window_text').innerText = msg;
 }
 
-function putDataToEditWindowForAdd() {
-    $("#title_edit_window").empty();
-    $("#title_edit_window").append($('<h2/>').html("Add user"));
-
-
-    $("#user_id").val("");
-    $("#user_id").attr("disabled", true);
-    $("#user_first_name").val("");
-    $("#user_last_name").val("");
-    $("#user_birth_day").val("");
-    $("#user_gender").val("");
-
-
-    $(".ok_edit_window").off();
-    $(".ok_edit_window").click(function () {
-        showEditWindow('none');
-        createUser();
-
-    });
-
-}
-
 function putDataToEditWindow(user) {
-    // $("#title_edit_window").empty();
-    // $("#title_edit_window").html("Update user");
-    //$("#user_id").attr("disabled", false);
-
     $("#edit_user_id").val(user['id']);
     $("#edit_user_first_name").val(user['firstName']);
     $("#edit_user_last_name").val(user['lastName']);
     $("#edit_user_birth_day").val(user['birthDay']);
     $("#edit_user_gender").val(user['gender']);
-
-    // $(".add_user_button").off();
-    // $(".add_user_button").click(function () {
-    //     showEditWindow('none');
-    //     putUser();
-    // });
 }
 
 function show(state){
